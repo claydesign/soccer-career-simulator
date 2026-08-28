@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Soccer Career Simulator</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0d1117;color:#f4f7fb;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif}
+main{max-width:540px;margin:auto;padding:18px 15px 40px}h1{font-size:30px;margin:4px 0}h2{font-size:21px}.muted{color:#9ba6b4}
+.card{background:#181e27;border:1px solid #2b3543;border-radius:18px;padding:16px;margin:12px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{background:#10151c;border-radius:13px;padding:11px}.label{font-size:11px;color:#9ba6b4}.val{font-size:21px;font-weight:800}
+input,select,button{width:100%;padding:13px;margin-top:8px;border-radius:12px;border:1px solid #3a4554;background:#232b36;color:#fff;font-size:16px}
+button{background:#2e7ff7;border:0;font-weight:750}.secondary{background:#303947}.danger{background:#983d3d}
+.offer{border:1px solid #394553;border-radius:14px;padding:13px;margin:9px 0}.pill{display:inline-block;padding:4px 8px;border-radius:20px;background:#2a3442;font-size:12px;margin:2px}
+.timeline{border-left:2px solid #394553;padding-left:13px}.season{margin:12px 0}nav{position:sticky;bottom:8px;display:flex;gap:6px;background:#171d26dd;backdrop-filter:blur(12px);padding:8px;border:1px solid #303947;border-radius:16px}nav button{font-size:12px;margin:0;padding:10px}
+</style>
+</head>
+<body><main><div id="app"></div></main>
+<script>
+const cups={England:["FA Cup","EFL Cup"],Spain:["Copa del Rey"],Italy:["Coppa Italia"],Germany:["DFB-Pokal"],France:["Coupe de France"],Netherlands:["KNVB Cup"],Portugal:["Taça de Portugal"],Belgium:["Belgian Cup"],Turkey:["Turkish Cup"],"United States":["U.S. Open Cup"],Mexico:["Copa MX"],Brazil:["Copa do Brasil"],Argentina:["Copa Argentina"],Colombia:["Copa Colombia"],Chile:["Copa Chile"],Japan:["Emperor's Cup"],"South Korea":["Korean FA Cup"],Australia:["Australia Cup"]};
+const clubs={England:[["Burnley",5,2500],["West Ham",4,1700],["Manchester City",1,700]],Spain:[["Alavés",5,2500],["Villarreal",4,1700],["Real Madrid",1,700]],Italy:[["Lecce",5,2500],["Fiorentina",4,1700],["Inter Milan",1,700]],Germany:[["Mainz",5,2500],["Eintracht Frankfurt",4,1700],["Bayern Munich",1,700]],France:[["Nantes",5,2500],["Lyon",4,1700],["Paris Saint-Germain",1,700]],"United States":[["Charlotte FC",5,2500],["Orlando City",4,1800],["Inter Miami",1,800]],Brazil:[["Ceará",5,2500],["Fluminense",4,1700],["Flamengo",1,700]],Argentina:[["Tigre",5,2500],["Racing Club",4,1700],["River Plate",1,700]],Mexico:[["Puebla",5,2500],["Monterrey",4,1700],["Club América",1,700]],Portugal:[["Estoril",5,2500],["Braga",4,1700],["Benfica",1,700]],Netherlands:[["Heracles",5,2500],["AZ",4,1700],["Ajax",1,700]],Belgium:[["Kortrijk",5,2500],["Gent",4,1700],["Club Brugge",1,700]],Turkey:[["Kasımpaşa",5,2500],["Trabzonspor",4,1700],["Galatasaray",1,700]],Japan:[["Shonan Bellmare",5,2500],["Urawa Reds",4,1700],["Kawasaki Frontale",1,700]],Australia:[["Western Sydney",5,2500],["Melbourne Victory",4,1700],["Sydney FC",1,700]]};
+const nations=Object.keys(clubs), elite=["Real Madrid","Barcelona","Manchester City","Liverpool","Bayern Munich","Paris Saint-Germain","Inter Milan","Arsenal","Juventus","AC Milan"];
+const events=[
+[16,20,"😂","Overslept","You slept through three alarms and nearly missed training."],
+[16,20,"💸","You Got Scammed","A fake investment costs you money."],
+[16,20,"😂","Forgot Your Boots","Your boots are at home on an important training day."],
+[16,22,"🎮","Gaming Marathon","You stayed up way too late playing games."],
+[17,24,"⭐","Scout Discovery","A major club has unexpectedly sent scouts."],
+[17,25,"🔥","Breakthrough Training","Your technique suddenly feels a level better."],
+[18,30,"📱","Viral Moment","A clip of your performance explodes online."],
+[18,35,"🧑‍🏫","Veteran Mentor","An experienced teammate offers to help you."],
+[21,40,"❤️","Relationship Decision","Your personal life becomes part of a major career decision."],
+[21,40,"💰","Smart Investment","You make a surprisingly good financial decision."],
+[22,40,"📰","Media Spotlight","You become one of the most talked-about players."],
+[25,40,"🏆","Big Match Hero","You score a decisive goal in a huge match."],
+[28,40,"🚨","Late-Career Elite Interest","An elite club wants you because of your reputation."]
+];
+let S=JSON.parse(localStorage.getItem("scs")||"null");
+const $=x=>document.getElementById(x);
+function save(){localStorage.setItem("scs",JSON.stringify(S))}
+function money(n){return "€"+Math.round(n).toLocaleString()}
+function esc(x){return String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function start(){let n=$("nation").value;S={name:$("name").value||"Alex Carter",nation:n,pos:$("pos").value,num:+$("num").value||9,age:16,year:2026,club:null,ovr:62,rep:12,value:750000,money:10000,agent:"Local",offers:clubs[n].map(x=>mk(x)),history:[],trophies:[],careerGoals:0,careerAssists:0,careerMinutes:0,screen:"career"};save();render()}
+function mk(x){return{club:x[0],tier:x[1],mins:x[2],fee:Math.max(S?.value||750000,x[1]==1?3000000:500000),role:x[1]==1?"Rotation":"Starter"}}
+function render(){
+if(!S){$("app").innerHTML='<div class="card"><h1>⚽ Soccer Career</h1><p class="muted">Start at 16 and build a career through retirement.</p><input id="name" placeholder="Player name" value="Alex Carter"><select id="nation">'+nations.map(n=>"<option>"+n+"</option>").join("")+'</select><select id="pos">'+["ST","LW","RW","CAM","CM","CDM","LB","CB","RB","GK"].map(x=>"<option>"+x+"</option>").join("")+'</select><input id="num" type="number" min="1" max="99" value="9"><button onclick="start()">Start Career</button></div>';return}
+let body=S.screen=="history"?historyPage():S.screen=="offers"?offersPage():dashboard();
+$("app").innerHTML='<div class="top"><div><h1>⚽ '+esc(S.name)+'</h1><div class="muted">'+S.nation+" • "+S.pos+" #"+S.num+'</div></div><div class="val">'+S.ovr+"</div></div>"+body+'<nav><button onclick="go(\'career\')">Career</button><button onclick="go(\'offers\')">Transfers</button><button onclick="go(\'history\')">History</button><button onclick="refresh()">Refresh</button></nav>'}
+function go(x){S.screen=x;save();render()}
+function dashboard(){return '<div class="card"><div class="grid"><div class="stat"><div class="label">AGE</div><div class="val">'+S.age+'</div></div><div class="stat"><div class="label">REPUTATION</div><div class="val">'+S.rep+'/100</div></div><div class="stat"><div class="label">VALUE</div><div class="val">'+money(S.value)+'</div></div><div class="stat"><div class="label">AGENT</div><div class="val">'+S.agent+'</div></div></div><h2>'+(S.club||"Choose your first club")+"</h2>"+(S.club?'<button onclick="simulate()">Simulate '+S.year+"/"+String(S.year+1).slice(-2)+"</button>":offersHTML())+'</div>'+(S.age>=21?'<div class="card"><h2>❤️ Life</h2><p class="muted">Relationships unlock at 21.</p><button class="secondary" onclick="life()">Random life event</button></div>':"")+'<div class="card"><h2>🏆 Trophy Cabinet</h2>'+(S.trophies.length?S.trophies.map(t=>"🏆 "+esc(t)+"<br>").join(""):'<span class="muted">No trophies yet.</span>')+'</div><div class="card"><button class="danger" onclick="reset()">Reset Career</button></div>'}
+function offersHTML(){return '<p class="muted">Low tier: more minutes • Mid tier: balanced • Top tier: fewer minutes.</p>'+S.offers.map((o,i)=>'<div class="offer"><b>'+esc(o.club)+'</b><br><span class="pill">Tier '+o.tier+'</span><span class="pill">'+o.role+"</span>"+(o.loan?'<span class="pill">LOAN</span>':"")+(o.surprise?'<span class="pill">⭐ SCOUTED</span>':"")+'<p>'+o.mins.toLocaleString()+' expected league minutes</p><button onclick="choose('+i+')">Join '+esc(o.club)+"</button></div>").join("")}
+function offersPage(){return '<div class="card"><h2>🔄 Transfer Market</h2><p class="muted">Agent: '+S.agent+". Better agents improve refresh quality.</p>"+offersHTML()+'</div><div class="card"><h2>🧑‍💼 Agents</h2><p>Professional €25k • Elite €100k • Superstar €500k • World Class €1m</p><button class="secondary" onclick="agent()">Upgrade Agent</button></div>'}
+function historyPage(){return '<div class="card"><h2>📖 Career History</h2>'+(S.history.length?'<div class="timeline">'+S.history.slice().reverse().map(h=>'<div class="season"><b>'+h.year+" — "+esc(h.club)+'</b><p>'+h.apps+" apps • "+h.minutes+" min • "+h.goals+" G • "+h.assists+" A • "+h.rating.toFixed(2)+" rating</p>"+h.trophies.map(t=>"🏆 "+esc(t)+"<br>").join("")+h.intl.map(t=>"🌎 "+esc(t)+"<br>").join("")+"<small>"+h.events.join(" • ")+"</small></div>").join("")+"</div>":'<span class="muted">No seasons completed yet.</span>')+"</div>"}
+function choose(i){S.club=S.offers[i].club;S.offers=[];save();render()}
+function refresh(){let costs={Local:0,Professional:25000,Elite:100000,Superstar:500000,"World Class":1000000},cost=costs[S.agent]||0;if(S.money<cost){alert("Not enough money.");return}S.money-=cost;makeOffers();S.screen="offers";save();render()}
+function makeOffers(){let b=clubs[S.nation].map(mk);if(S.agent!="Local"&&S.rep>=55&&Math.random()<.35){let c=elite[Math.floor(Math.random()*elite.length)];b.push({club:c,tier:1,mins:1000,fee:Math.max(S.value*1.7,5000000),role:"Rotation",surprise:true})}if(S.age>=28&&S.rep>=70&&Math.random()<Math.min(.42,.08+(S.rep-70)*.012)){let c=elite[Math.floor(Math.random()*elite.length)];b.push({club:c,tier:1,mins:1800,fee:Math.max(S.value*2,10000000),role:"Important Player",surprise:true})}if(S.age<=22&&Math.random()<.45){let o=b[Math.floor(Math.random()*b.length)];b.push({...o,club:o.club+" (Loan)",mins:3000,role:"Guaranteed Starter",loan:true})}S.offers=b.sort(()=>Math.random()-.5).slice(0,5)}
+function simulate(){
+let top=["Real Madrid","Manchester City","Bayern Munich","Paris Saint-Germain","Inter Milan"].some(x=>S.club.includes(x)),mins=Math.round((top?1150:2600)*(.85+Math.random()*.25)),apps=Math.max(8,Math.round(mins/82)),goals=S.pos=="GK"?Math.floor(Math.random()*2):Math.max(0,Math.round(mins*(.004+Math.random()*.004)*(S.ovr/75))),assists=Math.max(0,Math.round(goals*(.35+Math.random()*.35))),rating=6.65+Math.random()*.9+(goals>=25?.25:0),ts=[];
+(cups[S.nation]||[]).forEach(c=>{if(Math.random()<.14+(S.ovr>82?.08:0))ts.push(c)});
+if(Math.random()<.15+(S.ovr>80?.12:0))ts.push("League");if(Math.random()<.08+(S.ovr>84?.08:0))ts.push("UEFA Champions League");if(Math.random()<.09)ts.push("UEFA Europa League");if(Math.random()<.07)ts.push("UEFA Conference League");
+let ev=events.filter(e=>S.age>=e[0]&&S.age<=e[1]).sort(()=>Math.random()-.5).slice(0,2).map(e=>e[2]+" "+e[3]),fant=rating>=7.55||goals>=28||ts.length>=2,breakout=rating>=7.8||goals>=32;
+if(fant){S.ovr=Math.min(99,S.ovr+(breakout?4:2));S.rep+=breakout?12:7;S.value*=breakout?1.65:1.3;ev.unshift(breakout?"🚀 BREAKOUT SEASON":"🌟 FANTASTIC YEAR")}
+if(ts.includes("League")&&ts.length>=2&&Math.random()<.35){S.rep+=15;S.value*=1.25;ev.unshift("🏆 CLUB HISTORY MADE — you led an unlikely trophy run.")}
+S.ovr=Math.min(99,Math.max(1,S.ovr+Math.round((rating-7)*1.4)));S.rep=Math.min(100,S.rep+Math.max(0,Math.round((rating-7)*8)+Math.round(goals/8)+ts.length*3));S.value=Math.round(S.value*(1+(goals+assists)/250));S.money+=Math.round(S.value*.01);S.careerGoals+=goals;S.careerAssists+=assists;S.careerMinutes+=mins;
+let intl=[];if(S.age%4==2&&Math.random()<.75){let comp=["England","Spain","Germany","France","Italy","Portugal","Netherlands","Belgium"].includes(S.nation)?"Euros":["United States","Brazil","Argentina","Mexico","Colombia","Chile"].includes(S.nation)?"Copa América":["Japan","South Korea","Australia"].includes(S.nation)?"World Cup":"AFCON";intl.push(comp+" — "+(Math.random()<.18?"🏆 Winner":"Knockout Stage"))}
+S.history.push({year:S.year,club:S.club,apps,minutes:mins,goals,assists,rating,trophies:ts,intl,events:ev});S.trophies.push(...ts);S.year++;S.age++;makeOffers();S.screen="history";save();render()}
+function life(){let x=events.filter(e=>e[0]<=S.age&&S.age<=e[1]);let e=x[Math.floor(Math.random()*x.length)];alert(e[2]+" "+e[3])}
+function agent(){let names=["Local","Professional","Elite","Superstar","World Class"],i=names.indexOf(S.agent);if(i==4)return alert("You already have a World Class agent.");let costs=[0,25000,100000,500000,1000000],next=costs[i+1];if(S.money<next)return alert("Not enough money.");S.money-=next;S.agent=names[i+1];save();render()}
+function reset(){if(confirm("Delete this career?")){localStorage.removeItem("scs");S=null;render()}}
+render();
+</script></body></html>

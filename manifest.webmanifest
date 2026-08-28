@@ -1,0 +1,8 @@
+{
+  "name": "Soccer Career Simulator",
+  "short_name": "Soccer Career",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117"
+}
