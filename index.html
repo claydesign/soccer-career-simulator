@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#03060d">
+<title>MyFootyLife v1.004</title>
+<style>
+:root{
+  --bg:#02050b;--panel:#07101c;--panel2:#0b1726;--blue:#168cff;--blue2:#0067ff;
+  --cyan:#12b9ff;--text:#f5f8ff;--muted:#8fa1b8;--line:#12335e;--good:#35d47b;
+  --bad:#ff5d6c;--gold:#ffd45c;
+}
+*{box-sizing:border-box} html,body{margin:0;min-height:100%;background:#02050b;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{background:
+ radial-gradient(circle at 85% 18%,rgba(0,91,255,.20),transparent 25%),
+ radial-gradient(circle at 12% 82%,rgba(0,70,190,.18),transparent 30%),
+ linear-gradient(135deg,#02050b 0%,#06101c 48%,#01040a 100%);}
+button,input,select{font:inherit} button{cursor:pointer}
+.app{max-width:680px;margin:auto;min-height:100vh;padding:18px 16px 42px;position:relative}
+.app:before,.app:after{content:"";position:fixed;pointer-events:none;opacity:.55}
+.app:before{width:420px;height:420px;right:-240px;top:-160px;border-left:2px solid #005dff;border-bottom:2px solid #005dff;transform:rotate(45deg);box-shadow:0 0 30px #005dff44}
+.app:after{width:300px;height:300px;left:-190px;bottom:-130px;border-right:2px solid #005dff;border-top:2px solid #005dff;transform:rotate(45deg)}
+.hidden{display:none!important}
+.card{background:linear-gradient(145deg,rgba(6,17,30,.95),rgba(2,8,15,.96));border:1px solid #123e77;border-radius:24px;box-shadow:0 0 0 1px #07192e inset,0 18px 50px #0008}
+h1,h2,h3,p{margin-top:0}
+.small{font-size:12px;color:var(--muted)} .muted{color:var(--muted)}
+.blue{color:#1b96ff}.good{color:var(--good)}.bad{color:var(--bad)}.gold{color:var(--gold)}
+.logo{text-align:center;padding:24px 6px 12px}
+.logo h1{font-size:54px;line-height:.95;letter-spacing:-4px;font-style:italic;font-weight:900;margin:0;text-shadow:0 0 24px #0077ff55}
+.logo h1 span{color:#0d82ff}.logo .ball{font-size:46px;margin:20px 0 10px;filter:drop-shadow(0 0 10px #fff4)}
+.tag{color:#178cff;font-weight:800;font-size:14px;letter-spacing:.6px}
+.start{padding:20px;border-radius:30px}
+.field{background:rgba(4,12,22,.82);border:1px solid #0e396e;border-radius:22px;padding:18px 18px 14px;margin:0 0 14px}
+.field label{display:block;color:#178cff;font-size:13px;font-weight:700;letter-spacing:.5px;margin-bottom:7px}
+.field input,.field select{width:100%;border:0;background:transparent;color:#fff;outline:none;font-size:20px;font-weight:600}
+.field select option{background:#07101c}
+.primary{width:100%;border:1px solid #0ab0ff;border-radius:22px;padding:19px;background:linear-gradient(100deg,#0865ff,#0842d5);color:#fff;font-size:23px;font-weight:900;box-shadow:0 8px 30px #006eff44}
+.primary:active{transform:scale(.99)}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.header h2{margin:0;font-size:22px}.pill{padding:7px 11px;border:1px solid #174d87;border-radius:999px;background:#071425;color:#bcd4ef;font-size:12px;font-weight:800}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{padding:14px;border:1px solid #123861;border-radius:16px;background:#07111e}.stat b{display:block;font-size:24px}.stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.topbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:12px 0}.nav button,.secondary{border:1px solid #173e6d;background:#071221;color:#cfe2fa;border-radius:14px;padding:10px 7px;font-size:12px;font-weight:800}
+.nav button.active{background:#0b3d7b;border-color:#168cff;color:#fff}
+.section{padding:17px;margin-bottom:12px}.section h3{font-size:16px;margin-bottom:12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #0d2947}.row:last-child{border-bottom:0}
+.offer{border:1px solid #16477c;border-radius:17px;padding:14px;margin:9px 0;background:linear-gradient(135deg,#081729,#050d17)}
+.offer .club{font-size:18px;font-weight:900}.offer .money{font-size:20px;font-weight:900;color:#57c0ff}
+.offer button{margin-top:10px;width:100%;padding:11px;border:0;border-radius:12px;background:#0b74ff;color:#fff;font-weight:900}
+.offer button.alt{background:#13243a}
+.timeline{font-size:12px;color:#a8bad0}.timeline div{padding:9px 0;border-bottom:1px solid #0c2846}
+.bar{height:8px;border-radius:99px;background:#071221;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#0874ff,#17b7ff)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(9px);z-index:20;padding:18px;display:flex;align-items:center;justify-content:center}
+.modalbox{max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:22px;border:1px solid #168cff;border-radius:25px;background:linear-gradient(150deg,#071528,#02070e);box-shadow:0 0 50px #0075ff44}
+.modalbox h2{font-size:24px;margin-bottom:8px}.situation-text{line-height:1.55;color:#d8e5f5}
+.choice{width:100%;text-align:left;padding:14px;border-radius:16px;background:#071426;border:1px solid #164b83;color:#fff;margin-top:10px}
+.choice strong{display:block;font-size:16px}.choice .chance{display:inline-block;margin-top:8px;color:#58bfff;font-weight:900;font-size:13px}
+.result{padding:14px;border-radius:16px;background:#061526;border:1px solid #164b83;margin-top:13px;line-height:1.5}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:30;background:#07172a;border:1px solid #167ee5;padding:11px 15px;border-radius:999px;font-size:13px;font-weight:800;box-shadow:0 8px 30px #0009}
+@media(max-width:480px){.logo h1{font-size:44px}.grid3{grid-template-columns:1fr 1fr}.app{padding:10px 11px 30px}}
+</style>
+</head>
+<body>
+<div id="app" class="app"></div>
+<div id="modal" class="modal hidden"></div>
+<div id="toast" class="toast hidden"></div>
+<script>
+const VERSION="v1.004";
+const clubs={
+ "Manchester City":{tier:5,league:"Premier League",country:"England"},
+ "Liverpool":{tier:5,league:"Premier League",country:"England"},
+ "Arsenal":{tier:5,league:"Premier League",country:"England"},
+ "Manchester United":{tier:4,league:"Premier League",country:"England"},
+ "Chelsea":{tier:4,league:"Premier League",country:"England"},
+ "Tottenham":{tier:4,league:"Premier League",country:"England"},
+ "Newcastle United":{tier:4,league:"Premier League",country:"England"},
+ "Aston Villa":{tier:3,league:"Premier League",country:"England"},
+ "Real Madrid":{tier:5,league:"La Liga",country:"Spain"},
+ "Barcelona":{tier:5,league:"La Liga",country:"Spain"},
+ "Atletico Madrid":{tier:4,league:"La Liga",country:"Spain"},
+ "Bayern Munich":{tier:5,league:"Bundesliga",country:"Germany"},
+ "Borussia Dortmund":{tier:4,league:"Bundesliga",country:"Germany"},
+ "PSG":{tier:5,league:"Ligue 1",country:"France"},
+ "Inter Milan":{tier:5,league:"Serie A",country:"Italy"},
+ "AC Milan":{tier:4,league:"Serie A",country:"Italy"},
+ "Juventus":{tier:4,league:"Serie A",country:"Italy"},
+ "Benfica":{tier:3,league:"Primeira Liga",country:"Portugal"},
+ "Ajax":{tier:3,league:"Eredivisie",country:"Netherlands"},
+ "Celtic":{tier:2,league:"Scottish Premiership",country:"Scotland"}
+};
+const clubNames=Object.keys(clubs);
+let S=load()||newGame();
+let pending=null;
+
+function newGame(){
+ return {name:"Alex Carter",nationality:"England",position:"ST",number:9,age:16,year:1,week:1,
+ club:"Academy FC",clubTier:1,overall:55,appearances:0,goals:0,assists:0,
+ teamTrust:50,coachTrust:50,reputation:10,wage:10000,contractYears:0,contractClub:"",
+ leaguePos:0,seasonApps:0,seasonGoals:0,seasonAssists:0,
+ trophies:[],history:[],offers:[],screen:"dashboard",seasonUCL:false,seasonUEL:false,seasonUECL:false,
+ lastSeason:null};
+}
+function save(){localStorage.setItem("myfootylife_v1004",JSON.stringify(S))}
+function load(){try{return JSON.parse(localStorage.getItem("myfootylife_v1004"))}catch(e){return null}}
+function money(n){return "$"+Math.round(n).toLocaleString()+"/wk"}
+function clamp(n,a=0,b=100){return Math.max(a,Math.min(b,n))}
+function tierName(t){return ["Academy","Local","Professional","Strong","Elite","World Class"][t]||"Professional"}
+function wageFor(overall,tier){return Math.round((10000 + Math.max(0,overall-55)*1450 + Math.max(0,tier-1)*4500)/500)*500}
+function showToast(t){const x=document.getElementById("toast");x.textContent=t;x.classList.remove("hidden");setTimeout(()=>x.classList.add("hidden"),2200)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+
+function startScreen(){
+ return `<div class="card start">
+  <div class="logo"><h1>My<span>Footy</span>Life</h1><div class="ball">⚽</div><div class="tag">YOUR CAREER. YOUR CHOICES. YOUR LEGACY.</div></div>
+  <div class="field"><label>PLAYER NAME</label><input id="pname" value="${esc(S.name)}"></div>
+  <div class="field"><label>NATIONALITY</label><select id="nat"><option>England</option><option>Brazil</option><option>France</option><option>Germany</option><option>Italy</option><option>Spain</option><option>Portugal</option><option>Argentina</option><option>United States</option></select></div>
+  <div class="field"><label>POSITION</label><select id="pos"><option>ST</option><option>LW</option><option>RW</option><option>CAM</option><option>CM</option><option>CDM</option><option>CB</option><option>LB</option><option>RB</option><option>GK</option></select></div>
+  <div class="field"><label>SQUAD NUMBER</label><input id="num" type="number" min="1" max="99" value="${S.number}"></div>
+  <button class="primary" onclick="beginCareer()">START CAREER&nbsp; →</button>
+ </div>`
+}
+function beginCareer(){
+ S.name=document.getElementById("pname").value.trim()||"Alex Carter";
+ S.nationality=document.getElementById("nat").value;S.position=document.getElementById("pos").value;
+ S.number=clamp(+document.getElementById("num").value||9,1,99);S.screen="dashboard";save();render()
+}
+function dashboard(){
+ const season=S.age+" years old • Season "+S.year;
+ return `<div class="header"><h2>MyFootyLife</h2><span class="pill">${VERSION}</span></div>
+ <div class="topbar"><span class="pill">${esc(S.name)}</span><span class="pill">${esc(S.club)}</span><span class="pill">Week ${S.week}/38</span></div>
+ <div class="card section">
+  <div class="header"><div><h2>${S.overall} OVR</h2><div class="muted">${season}</div></div><div style="text-align:right"><b class="money">${money(S.wage)}</b><div class="small">${S.contractYears>0?S.contractYears+" year contract":"No senior contract"}</div></div></div>
+  <div class="grid3">
+   <div class="stat"><b>${S.appearances}</b><span>Appearances</span></div><div class="stat"><b>${S.goals}</b><span>Goals</span></div><div class="stat"><b>${S.assists}</b><span>Assists</span></div>
+   <div class="stat"><b>${S.teamTrust}</b><span>Team Trust</span></div><div class="stat"><b>${S.coachTrust}</b><span>Coach Trust</span></div><div class="stat"><b>${S.reputation}</b><span>Reputation</span></div>
+  </div>
+ </div>
+ <div class="nav">
+  ${["dashboard","offers","history","career"].map((x,i)=>`<button class="${S.screen===x?"active":""}" onclick="S.screen='${x}';render()">`+["Home","Transfers","History","Career"][i]+`</button>`).join("")}
+ </div>
+ ${S.screen==="offers"?offersPage():S.screen==="history"?historyPage():S.screen==="career"?careerPage():homePage()}`
+}
+function homePage(){
+ return `<div class="card section"><h3>Current Season</h3>
+  <div class="row"><span>League position</span><b>${S.leaguePos?S.leaguePos+"th":"—"}</b></div>
+  <div class="row"><span>Season appearances</span><b>${S.seasonApps}</b></div>
+  <div class="row"><span>Season goals / assists</span><b>${S.seasonGoals} / ${S.seasonAssists}</b></div>
+  <div class="row"><span>Club tier</span><b>${tierName(S.clubTier)}</b></div>
+  <div style="margin-top:14px"><div class="small">Coach trust</div><div class="bar"><i style="width:${S.coachTrust}%"></i></div></div>
+  <div style="margin-top:12px"><div class="small">Team trust</div><div class="bar"><i style="width:${S.teamTrust}%"></i></div></div>
+ </div>
+ <div class="card section"><h3>Next week</h3>
+ <p class="muted">Play matches, train, or rest. Situations can appear after weekly actions and will always give three visible risk/reward choices.</p>
+ <div class="grid3"><button class="secondary" onclick="act('match')">Play Match</button><button class="secondary" onclick="act('train')">Train</button><button class="secondary" onclick="act('rest')">Rest</button></div>
+ </div>
+ <div class="card section"><h3>Season rules</h3><p class="small">European competition is exclusive: a season can award at most one of UCL, UEL or UECL. Your league finish is recorded at season end.</p></div>`
+}
+function offersPage(){
+ let html=`<div class="card section"><h3>Transfer Market</h3><p class="small">New clubs approach you each season. Your current contract never gets broken by a transfer offer.</p>`;
+ if(S.contractYears>0) html+=`<div class="offer"><div class="club">Current club — ${esc(S.contractClub)}</div><div class="small">Contract protected for ${S.contractYears} more season(s)</div><div class="money">${money(S.wage)}</div><button class="alt" onclick="showToast('You are under contract — wage stays fixed until expiry.')">Stay under contract</button></div>`;
+ if(!S.offers.length) html+=`<p class="muted">No approaches yet. Offers are generated at the start of each new season.</p>`;
+ S.offers.forEach((o,i)=>html+=`<div class="offer"><div class="club">${esc(o.club)}</div><div class="small">${tierName(o.tier)} • ${esc(clubs[o.club].league)}</div><div class="money">${money(o.wage)}</div><div class="small">Contract: ${o.years} years</div><button onclick="acceptOffer(${i})">Accept Offer</button></div>`);
+ return html+"</div>"
+}
+function historyPage(){
+ return `<div class="card section"><h3>Season History</h3>${S.history.length?S.history.slice().reverse().map(h=>`<div class="row"><div><b>Age ${h.age} • ${esc(h.club)}</b><div class="small">${h.league} • League finish: ${h.leaguePos}th</div><div class="small">${h.apps} apps • ${h.goals} goals • ${h.assists} assists</div></div><div style="text-align:right">${h.trophy?`<span class="gold">${h.trophy}</span>`:""}</div></div>`).join(""):`<p class="muted">Your completed seasons will appear here.</p>`}</div>`
+}
+function careerPage(){
+ return `<div class="card section"><h3>Career Profile</h3><div class="row"><span>Player</span><b>${esc(S.name)}</b></div><div class="row"><span>Nationality</span><b>${esc(S.nationality)}</b></div><div class="row"><span>Position</span><b>${S.position}</b></div><div class="row"><span>Squad number</span><b>${S.number}</b></div><div class="row"><span>Age</span><b>${S.age}</b></div><div class="row"><span>Overall</span><b>${S.overall}</b></div><div class="row"><span>Weekly wage</span><b>${money(S.wage)}</b></div></div>
+ <div class="card section"><h3>Career totals</h3><div class="grid3"><div class="stat"><b>${S.appearances}</b><span>Apps</span></div><div class="stat"><b>${S.goals}</b><span>Goals</span></div><div class="stat"><b>${S.assists}</b><span>Assists</span></div></div></div>
+ <div class="card section"><button class="secondary" style="width:100%" onclick="resetGame()">Reset career</button></div>`
+}
+
+function act(type){
+ let app=0,g=0,a=0,ov=0,ct=0,tt=0,rep=0;
+ if(type==="match"){app=1;ct=3;tt=2;rep=2;ov=(Math.random()<.72?1:0);if(Math.random()<.28)g=1;if(Math.random()<.22)a=1}
+ if(type==="train"){ov=Math.random()<.72?1:0;ct=3;tt=1}
+ if(type==="rest"){ct=1}
+ S.appearances+=app;S.seasonApps+=app;S.goals+=g;S.seasonGoals+=g;S.assists+=a;S.seasonAssists+=a;
+ S.coachTrust=clamp(S.coachTrust+ct);S.teamTrust=clamp(S.teamTrust+tt);S.reputation=clamp(S.reputation+rep);S.overall=clamp(S.overall+ov,1,99);
+ S.week++;
+ // simple league movement based on performance
+ if(app){S.leaguePos=clamp((S.leaguePos||10)+(Math.random()<.55?-1:1),1,20)}
+ save();render();
+ if(Math.random()<.20) setTimeout(triggerSituation,180)
+ if(S.week>38) setTimeout(endSeason,250)
+}
+function triggerSituation(){
+ const situations=[
+  {title:"Extra Training",text:"After a run of strong results, the coach calls and changes a scheduled rest day into a training day. How do you train?",choices:[
+   ["A — Just show up","75%","You do what the coach asks without overcomplicating it.",1,2,1,1],
+   ["B — Train at the same place as the others","62%","You match the squad's intensity and show commitment.",2,4,2,2],
+   ["C — Train harder than everyone else","38%","You push yourself beyond the group and try to make a statement.",4,6,3,3]]},
+  {title:"Big Match Pressure",text:"A major European match is coming up. The staff notice your preparation and ask how you approach the week.",choices:[
+   ["A — Keep it simple","82%","You follow the normal plan and stay composed.",1,2,1,1],
+   ["B — Add extra preparation","66%","You add focused work without disrupting the team.",2,3,2,2],
+   ["C — Make the week all about winning","31%","You take a high-risk, ultra-intense approach.",5,5,4,3]]},
+  {title:"Teammate Challenge",text:"A teammate challenges you to prove that you deserve a bigger role. How do you respond?",choices:[
+   ["A — Let your football answer","78%","You stay calm and focus on your normal performance.",1,2,1,1],
+   ["B — Compete hard in training","59%","You raise your level and make the competition productive.",2,4,2,2],
+   ["C — Dominate the session","27%","You take every duel seriously and try to become impossible to ignore.",5,5,3,3]]}
+ ];
+ pending=situations[Math.floor(Math.random()*situations.length)];
+ openSituation()
+}
+function openSituation(){
+ const m=document.getElementById("modal");m.classList.remove("hidden");
+ m.innerHTML=`<div class="modalbox"><div class="pill">${pending.title}</div><h2>${pending.title}</h2><p class="situation-text">${pending.text}</p><p class="small">Choose one option. The percentage shown is the solid success chance for that choice.</p>${pending.choices.map((c,i)=>`<button class="choice" onclick="chooseSituation(${i})"><strong>${c[0]}</strong><span>${c[2]}</span><span class="chance">SUCCESS CHANCE: ${c[1]}</span></button>`).join("")}</div>`
+}
+function chooseSituation(i){
+ const c=pending.choices[i], chance=parseInt(c[1]);const success=Math.random()*100<chance;
+ // c[3] coach, c[4] team, c[5] reputation, c[6] overall
+ let d=c[3],t=c[4],r=c[5],o=c[6];
+ if(success){S.coachTrust=clamp(S.coachTrust+d);S.teamTrust=clamp(S.teamTrust+t);S.reputation=clamp(S.reputation+r);S.overall=clamp(S.overall+o,1,99)}
+ else{S.coachTrust=clamp(S.coachTrust-Math.max(1,d-1));S.teamTrust=clamp(S.teamTrust-Math.max(1,t-2));S.reputation=clamp(S.reputation-Math.max(1,r-1));S.overall=clamp(S.overall-(o>2?1:0),1,99)}
+ pending.result={success,effects:{coach:d,team:t,rep:r,ov:o}};showSituationResult();save()
+}
+function showSituationResult(){
+ const m=document.getElementById("modal"),r=pending.result;
+ m.innerHTML=`<div class="modalbox"><div class="pill">${r.success?"POSITIVE RESULT":"NEGATIVE RESULT"}</div><h2>${r.success?"It paid off.":"It didn't work out."}</h2><p class="situation-text">${r.success?"Your choice impressed the people around the club and the result was positive.":"The choice didn't produce the result you wanted. Trust and reputation take a hit."}</p><div class="result"><b>Team Trust:</b> ${r.success?"+":"-"}${r.effects.team}<br><b>Coach Trust:</b> ${r.success?"+":"-"}${r.effects.coach}<br><b>Reputation:</b> ${r.success?"+":"-"}${r.effects.rep}<br><b>Overall:</b> ${r.success?"+":"-"}${r.effects.ov>2?1:0}</div><button class="primary" style="margin-top:14px" onclick="closeSituation()">Continue</button></div>`
+}
+function closeSituation(){pending=null;document.getElementById("modal").classList.add("hidden");render()}
+function generateOffers(){
+ const pool=clubNames.filter(c=>c!==S.club);
+ // Different clubs each year; deterministic exclusion of last approaches
+ const shuffled=pool.sort(()=>Math.random()-.5);
+ S.offers=shuffled.slice(0,Math.min(4,shuffled.length)).map(club=>({club,tier:clubs[club].tier,wage:wageFor(S.overall,clubs[club].tier),years:Math.random()<.55?2:3}));
+}
+function acceptOffer(i){
+ const o=S.offers[i];
+ S.club=o.club;S.clubTier=o.tier;S.wage=o.wage;S.contractYears=o.years;S.contractClub=o.club;S.offers=[];S.coachTrust=clamp(S.coachTrust+6);S.reputation=clamp(S.reputation+5);save();render();showToast("Transfer completed — "+o.club)
+}
+function endSeason(){
+ if(S.week<=38)return;
+ // make league finish meaningful and save it
+ const performance=clamp(Math.round(21-S.overall/5 + (S.seasonApps/5) - (S.seasonGoals/10)),1,20);
+ S.leaguePos=performance;
+ let trophy="";
+ // only one European trophy can be awarded in a season
+ const euroRoll=Math.random();
+ if(S.overall>=82 && euroRoll<.18){S.seasonUCL=true;S.seasonUEL=false;S.seasonUECL=false;trophy="UEFA Champions League"}
+ else if(S.overall>=72 && euroRoll<.38){S.seasonUCL=false;S.seasonUEL=true;S.seasonUECL=false;trophy="UEFA Europa League"}
+ else if(S.overall>=62 && euroRoll<.55){S.seasonUCL=false;S.seasonUEL=false;S.seasonUECL=true;trophy="UEFA Conference League"}
+ S.history.push({age:S.age,club:S.club,league:clubs[S.club]?.league||"Domestic League",leaguePos:S.leaguePos,apps:S.seasonApps,goals:S.seasonGoals,assists:S.seasonAssists,trophy});
+ S.lastSeason={pos:S.leaguePos,trophy,apps:S.seasonApps,goals:S.seasonGoals,assists:S.seasonAssists};
+ // contract years tick down at season end
+ if(S.contractYears>0)S.contractYears--;
+ S.age++;S.year++;S.week=1;S.seasonApps=0;S.seasonGoals=0;S.seasonAssists=0;S.leaguePos=10;
+ S.seasonUCL=S.seasonUEL=S.seasonUECL=false;
+ // Wage can only rise when contract expires. New offers may be higher even while protected.
+ if(S.contractYears===0){S.contractClub="";S.wage=wageFor(S.overall,S.clubTier)}
+ generateOffers();save();showSeasonEnd()
+}
+function showSeasonEnd(){
+ const m=document.getElementById("modal");m.classList.remove("hidden");
+ m.innerHTML=`<div class="modalbox"><div class="pill">SEASON COMPLETE</div><h2>Season ${S.year-1} finished</h2>
+ <p class="situation-text">Your team finished <b>${S.lastSeason.pos}th</b> in the league.</p>
+ <div class="grid3"><div class="stat"><b>${S.lastSeason.apps}</b><span>Apps</span></div><div class="stat"><b>${S.lastSeason.goals}</b><span>Goals</span></div><div class="stat"><b>${S.lastSeason.assists}</b><span>Assists</span></div></div>
+ <div class="result">${S.lastSeason.trophy?`🏆 <b>${S.lastSeason.trophy}</b>`:"No European trophy this season."}<br><br>${S.contractYears>0?`You remain under contract with ${esc(S.club)}. Your wage stays at ${money(S.wage)} until the contract ends.`:"Your contract has expired. New transfer approaches are available."}</div>
+ <button class="primary" style="margin-top:14px" onclick="document.getElementById('modal').classList.add('hidden');render()">Continue</button></div>`
+}
+function resetGame(){if(confirm("Delete this career and start again?")){localStorage.removeItem("myfootylife_v1004");S=newGame();render()}}
+function render(){document.getElementById("app").innerHTML=S.screen==="start"?startScreen():dashboard()}
+if(!S.screen)S.screen="dashboard";render();
+</script>
+</body></html>

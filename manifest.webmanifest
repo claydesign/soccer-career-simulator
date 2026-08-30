@@ -1,8 +1,9 @@
 {
-  "name": "Soccer Career Simulator",
-  "short_name": "Soccer Career",
-  "start_url": "./",
+  "name": "MyFootyLife",
+  "short_name": "MyFootyLife",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0d1117",
-  "theme_color": "#0d1117"
+  "background_color": "#02050b",
+  "theme_color": "#0067ff",
+  "icons": []
 }
