@@ -1,1 +1,9 @@
-{"name":"MyFootyLife","short_name":"MyFootyLife","start_url":"./index.html","display":"standalone","background_color":"#02050b","theme_color":"#0877ff"}
+{
+  "name": "MyFootyLife",
+  "short_name": "MyFootyLife",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#02050b",
+  "theme_color": "#0067ff",
+  "icons": []
+}
